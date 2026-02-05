@@ -26,15 +26,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
+
 import { SprintSettlementDialog } from "@/components/sprint-settlement-dialog"
 import { cn } from "@/lib/utils"
 
@@ -57,10 +50,8 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
   })
   const [sprintRemainingBudget, setSprintRemainingBudget] = useState(0)
   const [createOpen, setCreateOpen] = useState(false)
-  const [confirmOpen, setConfirmOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [settlementOpen, setSettlementOpen] = useState(false)
-  const [pendingSprint, setPendingSprint] = useState<Sprint | null>(null)
   const [income, setIncome] = useState<string>("")
   const [savingsGoal, setSavingsGoal] = useState<string>("")
   const [startDate, setStartDate] = useState<string>("")
@@ -110,6 +101,13 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
     if (!incomeNumber || !savingsNumber || !startDate || !endDate) {
       return
     }
+
+    // Validation: Income must be greater than savings
+    if (incomeNumber < savingsNumber) {
+        toast.error("存钱金额不能超过总收入哦！")
+        return
+    }
+
     const sprint: Sprint = {
       id: `sprint-${Date.now()}`,
       income: incomeNumber,
@@ -117,16 +115,13 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
       startDate: new Date(startDate).toISOString(),
       endDate: new Date(endDate).toISOString(),
     }
-    setPendingSprint(sprint)
-    setConfirmOpen(true)
-  }
+    
+    startSprint(sprint)
+    
+    // Toast notification
+    toast.success(`已为小猪存入 ¥${savingsNumber.toFixed(2)}`)
 
-  const handleConfirm = (feedSavingsToBigGoal: boolean) => {
-    if (!pendingSprint) return
-    startSprint(pendingSprint, { feedSavingsToBigGoal })
-    setConfirmOpen(false)
     setCreateOpen(false)
-    setPendingSprint(null)
   }
 
   const showHelperText = !status && sprintInfo.stage === "none"
@@ -134,21 +129,16 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
   return (
     <>
       <Card className={cn(
-      "p-6 md:p-12 border-0 shadow-sm hover:shadow-md transition-all duration-500 flex flex-col justify-between relative overflow-hidden group bg-lime-600",
-      className
-    )}>
-        <div className="flex items-center gap-3 mb-4 md:mb-6 relative z-10">
-          <div className="flex items-center gap-2 md:gap-4">
-            <span className="text-xl md:text-3xl" role="img" aria-label="money-bag">
+        "p-4 border-0 shadow-sm flex flex-col justify-between relative overflow-hidden group bg-lime-600",
+        className
+      )}>
+        <div className="flex items-center gap-2 mb-2 relative z-10">
+          <div className="flex items-center gap-2">
+            <span className="text-xl" role="img" aria-label="money-bag">
                 💰
               </span>
               <div>
-                <h2 className="text-xl md:text-3xl font-bold text-white whitespace-nowrap">今日可花</h2>
-              {showHelperText && (
-                <p className="mt-1 text-xs md:text-sm text-white/80 hidden md:block">
-                  开启冲刺，算出每日安心额度。
-                </p>
-              )}
+                <h2 className="text-xl font-bold text-white whitespace-nowrap">今日可花</h2>
             </div>
           </div>
           <div className="ml-auto flex items-center">
@@ -156,7 +146,7 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
               <Button
                 type="button"
                 size="sm"
-                className="h-9 px-4 rounded-full shadow-sm hover:shadow-md transition-all duration-300 ease-[var(--ease-apple)] active:scale-90 bg-white text-lime-600 hover:bg-white/90"
+                className="h-8 px-3 text-xs rounded-full shadow-sm bg-white text-lime-600 hover:bg-white/90"
                 onClick={handleOpenCreate}
               >
                 🚀 开启冲刺
@@ -167,12 +157,12 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
                 type="button"
                 size="sm"
                 variant="outline"
-                className="h-7 px-3 text-xs rounded-full bg-white/20 border-white/40 text-white hover:bg-purple-500/20 hover:border-purple-300/50 hover:text-white active:bg-purple-500/30 transition-all duration-300 ease-[var(--ease-apple)] active:scale-90"
+                className="h-6 px-2 text-[10px] rounded-full bg-white/20 border-white/40 text-white hover:bg-white/30"
                 onClick={() => setDetailOpen(true)}
               >
-                <span>🔥 努力赚钱中</span>
+                <span>🔥 冲刺中</span>
                 {sprintInfo.daysLeft > 0 && (
-                  <span className="ml-1 text-[10px] text-white/80">
+                  <span className="ml-1 opacity-80">
                     剩{sprintInfo.daysLeft}天
                   </span>
                 )}
@@ -182,25 +172,24 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
               <Button
                 type="button"
                 size="sm"
-                className="h-9 px-4 rounded-full bg-white text-lime-600 hover:bg-white/90 transition-all duration-300 ease-[var(--ease-apple)] active:scale-90"
+                className="h-8 px-3 rounded-full bg-white text-lime-600 hover:bg-white/90"
                 onClick={() => setSettlementOpen(true)}
               >
-                🏁 结算冲刺
+                🏁 结算
               </Button>
             )}
           </div>
         </div>
 
-        <div className="mt-4 md:mt-8 relative z-10">
+        <div className="mt-2 relative z-10">
           <div className="relative inline-block">
             <p className={cn(
-              "text-6xl md:text-9xl font-black tracking-tighter transition-all duration-500 leading-none text-white",
+              "text-5xl font-black tracking-tighter transition-all duration-500 leading-none text-white",
               status?.mode === "throttling" ? "opacity-90" :
               status?.mode === "boosting" ? "opacity-100 drop-shadow-md" :
-
               "text-foreground"
             )}>
-              <span className="text-2xl md:text-5xl align-top font-medium text-white mr-1 md:mr-2">¥</span>
+              <span className="text-2xl align-top font-medium text-white mr-1">¥</span>
               {formattedAmount}
             </p>
           </div>
@@ -269,25 +258,6 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
           </form>
         </DialogContent>
       </Dialog>
-
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>投喂小猪吗？</AlertDialogTitle>
-            <AlertDialogDescription>
-              是否将 {savingsGoal || 0} 元立即「投喂」给小猪？
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => handleConfirm(false)}>
-              暂时不投喂
-            </AlertDialogAction>
-            <AlertDialogAction onClick={() => handleConfirm(true)}>
-              立即投喂
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {sprintInfo.sprint && (
         <Dialog open={detailOpen} onOpenChange={setDetailOpen}>

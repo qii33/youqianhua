@@ -48,7 +48,7 @@ interface RecentTransactionsCardProps {
   onOpenLedger?: () => void
 }
 
-export function RecentTransactionsCard({ onOpenLedger }: RecentTransactionsCardProps) {
+export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTransactionsCardProps & { limit?: number }) {
   const flipContext = useFlipContext()
   const handleOpenLedger = () => {
     if (flipContext && flipContext.setFlipped) {
@@ -92,7 +92,7 @@ export function RecentTransactionsCard({ onOpenLedger }: RecentTransactionsCardP
       const sorted = list
         .slice()
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 20)
+        .slice(0, limit)
       setTransactions(sorted)
       setWishes(getWishes())
     }

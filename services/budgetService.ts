@@ -150,6 +150,7 @@ export function getWishes(): Wish[] {
 
 export function saveWishes(wishes: Wish[]) {
   saveToStorage<Wish[]>(STORAGE_KEYS.wishes, wishes)
+  notifyBudgetChanged()
 }
 
 export function getTransactions(): Transaction[] {
@@ -389,12 +390,11 @@ export function hasActiveSprint(todayInput?: Date): boolean {
 }
 
 export function startSprint(
-  sprint: Sprint,
-  options: { feedSavingsToBigGoal: boolean },
+  sprint: Sprint
 ): { sprint: Sprint; bigGoal: BigGoal | null } {
   saveCurrentSprint(sprint)
   const bigGoal = getBigGoal()
-  if (options.feedSavingsToBigGoal && bigGoal) {
+  if (bigGoal) {
     const updatedBigGoal: BigGoal = {
       ...bigGoal,
       savedAmount: bigGoal.savedAmount + sprint.savingsGoal,

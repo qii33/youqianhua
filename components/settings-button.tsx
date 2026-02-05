@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import {
   clearAllFinancialData,
+  ensureDemoData,
   getBigGoal,
   getCurrentSprint,
   getTransactions,
@@ -296,6 +297,27 @@ export function SettingsButton() {
                   清空数据
                 </Button>
               </div>
+            </div>
+            <div className="pt-2 border-t border-border/60 space-y-2">
+               <p className="text-sm font-medium text-foreground">开发与测试</p>
+               <div className="flex items-center justify-between gap-4">
+                 <p className="text-xs text-muted-foreground">
+                   注入演示数据以验证产品流程（需先清空数据）。
+                 </p>
+                 <Button
+                   type="button"
+                   variant="secondary"
+                   size="sm"
+                   onClick={() => {
+                     ensureDemoData()
+                     if (typeof window !== "undefined") {
+                       window.location.reload()
+                     }
+                   }}
+                 >
+                   注入测试数据
+                 </Button>
+               </div>
             </div>
           </div>
         </DialogContent>

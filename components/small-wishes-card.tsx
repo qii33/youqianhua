@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
-export function SmallWishesCard({ className }: { className?: string }) {
+export function SmallWishesCard({ className, limit }: { className?: string; limit?: number }) {
   const [wishes, setWishes] = useState<Wish[]>([])
   const [swipedId, setSwipedId] = useState<string | null>(null)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -46,7 +46,12 @@ export function SmallWishesCard({ className }: { className?: string }) {
   useEffect(() => {
     ensureDemoData()
     setWishes(getWishes())
+    const handleUpdate = () => setWishes(getWishes())
+    window.addEventListener("budget-updated", handleUpdate)
+    return () => window.removeEventListener("budget-updated", handleUpdate)
   }, [])
+
+  const displayWishes = limit ? wishes.slice(0, limit) : wishes
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
@@ -135,10 +140,10 @@ export function SmallWishesCard({ className }: { className?: string }) {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="flex-1 min-h-0 relative p-2 md:p-6 pt-0 md:pt-0 z-10">
-          <div className="h-full overflow-y-auto scrollbar-hide relative">
-            <div className="space-y-1.5 md:space-y-3 pb-24">
-              {wishes.map((wish) => {
+        <CardContent className="flex-1 min-h-0 flex flex-col p-2 md:p-6 pt-0 md:pt-0 z-10">
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide relative">
+            <div className="space-y-1.5 md:space-y-3 pb-2">
+              {displayWishes.map((wish) => {
                 const progress =
                   wish.targetAmount > 0
                     ? (wish.savedAmount / wish.targetAmount) * 100
@@ -225,11 +230,9 @@ export function SmallWishesCard({ className }: { className?: string }) {
                 )
               })}
             </div>
-
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-fuchsia-500 to-transparent pointer-events-none" />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 pt-2">
+          <div className="pt-2 mt-auto shrink-0">
             <Button
               onClick={handleAddWish}
               variant="outline"

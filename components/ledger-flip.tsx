@@ -113,17 +113,8 @@ function LedgerView({ onBack }: LedgerViewProps) {
     const end = endOfWeek(endOfMonth(currentMonth))
     const days = eachDayOfInterval({ start, end })
 
-    // Ensure 6 rows (42 days) for consistent height
-    if (days.length < 42) {
-      const remaining = 42 - days.length
-      const lastDay = days[days.length - 1]
-      for (let i = 1; i <= remaining; i++) {
-        days.push(new Date(lastDay.getTime() + i * 24 * 60 * 60 * 1000))
-      }
-    }
-
     return (
-      <div className="grid grid-cols-7 gap-2 w-full h-full p-2">
+      <div className="grid grid-cols-7 gap-2 w-full p-2">
         {["周日", "周一", "周二", "周三", "周四", "周五", "周六"].map((day) => (
           <div key={day} className="text-center text-xs text-muted-foreground py-2 font-medium">
             {day}

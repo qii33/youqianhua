@@ -92,46 +92,57 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
 
   if (!goal) {
     return (
-      <Card className={cn("p-3 md:p-8 bg-zinc-100 dark:bg-zinc-800 border-0 shadow-sm hover:shadow-md transition-all duration-300 ease-[var(--ease-apple)] active:scale-[0.98] h-full relative overflow-hidden group rounded-[2rem]", className)}>
-        {/* Decorative background */}
-        <div className="absolute -bottom-4 -right-4 opacity-[0.03] text-9xl pointer-events-none select-none transform rotate-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
-          🐷
-        </div>
-
+      <Card className={cn(
+      "p-4 border-0 shadow-sm flex flex-col justify-between relative overflow-hidden group bg-white dark:bg-zinc-900",
+      className
+    )}>
         {minimal ? (
-          <div className="flex-1 flex items-center justify-center w-full h-full relative z-10">
-            <div className="aspect-square h-full w-auto relative max-h-[160px]">
-              <CircularProgress value={0} size={undefined} strokeWidth={12} />
+          <div 
+            className="flex-1 flex items-center justify-center w-full h-full relative z-10 cursor-pointer"
+            onClick={() => setEditOpen(true)}
+          >
+            <div className="w-24 h-24 rounded-full border-4 border-dashed border-zinc-200 dark:border-zinc-700 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
+               <span className="text-3xl font-light text-zinc-300 dark:text-zinc-600">+</span>
             </div>
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between gap-1 mb-2 md:mb-6 relative z-10">
-              <div className="flex items-center gap-2 md:gap-3">
-                <span className="text-xl md:text-3xl" role="img" aria-label="piggy bank">
+            <div className="flex items-center justify-between gap-1 mb-2 relative z-10">
+              <div className="flex items-center gap-2">
+                <span className="text-xl" role="img" aria-label="piggy bank">
                   🐷
                 </span>
                 <div>
-                  <h2 className="text-base md:text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">小猪存钱罐</h2>
-                  <p className="text-[10px] md:text-xs text-zinc-500 hidden md:block font-medium">
-                    Set a goal, feed the pig
-                  </p>
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">小猪存钱罐</h2>
                 </div>
               </div>
               <Button
                 type="button"
+                size="sm"
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8 md:h-10 md:w-10 rounded-full hover:bg-black/5 text-zinc-400 hover:text-zinc-900 transition-all duration-300 ease-[var(--ease-apple)] active:scale-90"
+                className="h-8 w-8 p-0 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 onClick={() => setEditOpen(true)}
               >
-                <Settings className="w-5 h-5 md:w-6 md:h-6" />
+                <span className="text-lg">⚙️</span>
               </Button>
             </div>
-            <div className="flex-1 flex items-center justify-center p-4 relative z-10">
-                <p className="text-zinc-500 text-xs md:text-sm text-center font-medium max-w-[80%]">
-                先设置一个大目标，<br/>小猪才知道往哪跑。
-                </p>
+
+            <div className="flex-1 flex flex-col justify-center relative z-10 w-full min-h-0">
+               <div className="mt-2">
+                 <div className="flex items-baseline gap-1">
+                   <span className="text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-none">
+                     <span className="text-2xl align-top font-medium mr-1">¥</span>
+                     {goal.savedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                   </span>
+                 </div>
+                 
+                 <div className="space-y-1 mt-3">
+                    <div className="flex items-center justify-between text-[10px] text-zinc-500 font-medium">
+                      <span>目标 ¥{goal.targetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                    <Progress value={progress} className="h-1.5 bg-zinc-200 dark:bg-zinc-700" indicatorClassName="bg-lime-500" />
+                 </div>
+               </div>
             </div>
           </>
         )}
@@ -160,43 +171,53 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
   return (
     <>
       <Card 
-        className={cn("p-3 md:p-8 bg-zinc-100 dark:bg-zinc-800 border shadow-2xl hover:shadow-xl transition-all duration-300 ease-[var(--ease-apple)] active:scale-[0.98] h-full relative overflow-hidden group rounded-[2rem] gap-0 md:gap-6", className)}
+        className={cn("p-4 border-0 shadow-sm flex flex-col justify-between relative overflow-hidden group bg-white dark:bg-zinc-900", className, minimal && "cursor-pointer")}
+        onClick={() => minimal && setEditOpen(true)}
       >
-        
-        {/* Decorative background */}
-        <div className="absolute -bottom-8 -right-8 opacity-[0.05] text-[10rem] pointer-events-none select-none transform rotate-12 transition-transform duration-700 ease-[var(--ease-apple)] group-hover:scale-110 group-hover:rotate-0">
-          🐷
-        </div>
-
         {minimal ? (
           <>
-            <CardHeader className="pb-0 md:pb-6 flex-none p-3 md:p-6 relative z-10">
-               <div className="flex items-center gap-2 md:gap-3">
-                 <span className="text-xl md:text-3xl" role="img" aria-label="piggy bank">
-                   🐷
-                 </span>
-                 <div>
-                   <h2 className="text-base md:text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">小猪存钱罐</h2>
-                   <p className="text-[10px] md:text-xs text-zinc-500 hidden md:block font-medium">
-                     Keep feeding...
-                   </p>
+            <CardHeader className="pb-0 flex-none p-4 relative z-10">
+               <div className="flex items-center justify-between mb-2">
+                 <div className="flex items-center gap-2">
+                   <span className="text-xl" role="img" aria-label="piggy bank">
+                     🐷
+                   </span>
+                   <div>
+                     <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">小猪存钱罐</h2>
+                   </div>
                  </div>
+                 <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setEditOpen(true)
+                    }}
+                  >
+                    <span className="text-lg">⚙️</span>
+                  </Button>
                </div>
             </CardHeader>
-            <div className="flex-1 flex flex-col justify-center px-4 pb-3 relative z-10 w-full min-h-0">
-               <div className="space-y-3">
-                 <div className="flex items-baseline gap-1">
-                   <span className="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter">
-                     ¥{goal.savedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                   </span>
+            <div className="flex-1 flex flex-col px-4 pb-3 relative z-10 w-full min-h-0 justify-end">
+               <div className="w-full mb-2">
+                 <div className="flex items-end justify-between w-full">
+                   <div className="flex items-baseline gap-1">
+                     <span className="text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-none">
+                       <span className="text-xl align-top font-medium mr-1">¥</span>
+                       {goal.savedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                     </span>
+                   </div>
+                   
+                   <div className="text-[10px] text-zinc-500 font-medium mb-1.5">
+                     <span>目标 ¥{goal.targetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                   </div>
                  </div>
-                 
-                 <div className="space-y-1">
-                    <div className="flex items-center justify-between text-[10px] text-zinc-500 font-medium">
-                      <span>目标 ¥{goal.targetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <Progress value={progress} className="h-2 bg-zinc-200 dark:bg-zinc-700" indicatorClassName="bg-lime-500" />
-                 </div>
+               </div>
+               
+               <div className="w-full shrink-0">
+                  <Progress value={progress} className="h-1.5 bg-zinc-200 dark:bg-zinc-700 w-full" indicatorClassName="bg-lime-500" />
                </div>
             </div>
           </>

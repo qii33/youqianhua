@@ -24,6 +24,7 @@ import {
   getWishes,
   type Wish,
   notifyBudgetChanged,
+  addTransaction,
 } from "@/services/budgetService"
 import { startOfDay, parseISO, isSameDay, differenceInCalendarDays } from "date-fns"
 
@@ -184,7 +185,7 @@ export function DailySurplusHandler() {
                 <Label htmlFor="r-rollover" className="flex-1 cursor-pointer">
                   🥂 过好日子
                   <span className="block text-xs text-muted-foreground mt-1">
-                    这钱我今天要花！
+                    滚入预算池，平摊到接下来的每一天
                   </span>
                 </Label>
               </div>
