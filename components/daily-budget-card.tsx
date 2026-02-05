@@ -181,7 +181,7 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
           </div>
         </div>
 
-        <div className="mt-2 relative z-10">
+        <div className="mt-2 mb-3 relative z-10">
           <div className="relative inline-block">
             <p className={cn(
               "text-5xl font-black tracking-tighter transition-all duration-500 leading-none text-white",
