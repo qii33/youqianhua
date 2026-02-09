@@ -65,12 +65,12 @@ export default function DashboardPage() {
               onScroll={handleScroll}
             >
               {/* Slide 1: Daily Budget */}
-              <div className="min-w-full h-full p-4 pr-2 snap-center">
+              <div className="min-w-full h-full p-4 snap-center">
                 <DailyBudgetCard className="h-full shadow-lg border-0" />
               </div>
 
               {/* Slide 2: Piggy Bank */}
-              <div className="min-w-full h-full p-4 pl-2 snap-center">
+              <div className="min-w-full h-full p-4 snap-center">
                 <GoalProgressCard className="h-full shadow-lg border-0" minimal={true} /> 
               </div>
             </div>

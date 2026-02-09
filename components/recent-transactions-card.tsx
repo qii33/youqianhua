@@ -478,11 +478,11 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
               />
             </div>
           </div>
-          <DialogFooter className="flex justify-between gap-2 sm:justify-between">
+          <DialogFooter className="grid grid-cols-2 gap-3 sm:gap-3">
             <Button 
               type="button" 
               variant="destructive" 
-              className="mr-auto bg-red-500/10 text-red-500 hover:bg-red-500/20"
+              className="w-full bg-red-500/10 text-red-500 hover:bg-red-500/20"
               onClick={() => {
                 if (editingId) {
                   handleDelete(editingId)
@@ -493,7 +493,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
             >
               删除
             </Button>
-            <Button type="button" onClick={handleSaveEdit}>
+            <Button type="button" className="w-full" onClick={handleSaveEdit}>
               保存修改
             </Button>
           </DialogFooter>
