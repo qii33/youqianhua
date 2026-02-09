@@ -106,7 +106,7 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
     <>
       <Card className={cn("overflow-hidden border-0 shadow-none transition-all duration-300 flex flex-col bg-transparent relative group h-full", className)}>
         <CardContent className="flex-1 min-h-0 p-0 z-10 h-full">
-          <div className="h-full flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-1 gap-3 touch-pan-x">
+          <div className="h-full flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-1 gap-3 touch-pan-x py-4">
             
             {/* Add Wish Button - Compact Circle */}
             <div 

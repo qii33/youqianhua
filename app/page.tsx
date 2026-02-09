@@ -89,19 +89,19 @@ export default function DashboardPage() {
           {/* Bottom Scroll Area - Flex Column - Clean Layout */}
           <div className="flex-1 min-h-0 flex flex-col px-4 pb-4 space-y-1 overflow-hidden">
             
-            {/* Transactions (Now on Top) */}
-            <div className="flex-1 min-h-[140px] flex flex-col">
-              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm">
-                <RecentTransactionsCard limit={5} />
-              </div>
+            {/* Wishes (Middle, Compact, Transparent) */}
+          <div className="flex-none h-[110px] flex flex-col">
+            <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl">
+              <SmallWishesCard limit={3} className="shadow-none border-0 h-full" />
             </div>
+          </div>
 
-            {/* Wishes (Now at Bottom, Compact, Transparent) */}
-            <div className="flex-none h-[80px] flex flex-col">
-              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl">
-                <SmallWishesCard limit={3} className="shadow-none border-0 h-full" />
-              </div>
+          {/* Transactions (Bottom) */}
+          <div className="flex-1 min-h-[140px] flex flex-col">
+            <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm">
+              <RecentTransactionsCard limit={5} />
             </div>
+          </div>
 
           </div>
 

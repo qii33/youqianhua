@@ -91,7 +91,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
-  const minSwipeDistance = 50
+  const minSwipeDistance = 30
 
   const onTouchStart = (e: React.TouchEvent, id: string) => {
     setTouchEnd(null)
@@ -479,8 +479,20 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
             </div>
           </div>
           <DialogFooter className="flex justify-between gap-2 sm:justify-between">
-            {/* Mobile swipe delete implemented, keeping delete hidden in dialog to reduce abruptness */}
-            <div /> 
+            <Button 
+              type="button" 
+              variant="destructive" 
+              className="mr-auto bg-red-500/10 text-red-500 hover:bg-red-500/20"
+              onClick={() => {
+                if (editingId) {
+                  handleDelete(editingId)
+                  setEditOpen(false)
+                  setEditingId(null)
+                }
+              }}
+            >
+              删除
+            </Button>
             <Button type="button" onClick={handleSaveEdit}>
               保存修改
             </Button>
