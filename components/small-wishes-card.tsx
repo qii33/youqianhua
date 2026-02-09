@@ -105,6 +105,10 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
   return (
     <>
       <Card className={cn("overflow-hidden border-0 shadow-none transition-all duration-300 flex flex-col bg-transparent relative group h-full", className)}>
+        {/* Title Overlay */}
+        <div className="absolute top-1 left-2 z-20 pointer-events-none">
+          <span className="text-[10px] font-bold text-zinc-400/80 dark:text-zinc-500/80">小小愿望</span>
+        </div>
         <CardContent className="flex-1 min-h-0 p-0 z-10 h-full">
           <div className="h-full flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-1 gap-3 touch-pan-x py-4">
             
