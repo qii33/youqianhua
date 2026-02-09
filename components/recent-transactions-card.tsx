@@ -479,6 +479,9 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
             </div>
           </div>
           <DialogFooter className="grid grid-cols-2 gap-3 sm:gap-3">
+            <Button type="button" className="w-full" onClick={handleSaveEdit}>
+              保存修改
+            </Button>
             <Button 
               type="button" 
               variant="destructive" 
@@ -492,9 +495,6 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
               }}
             >
               删除
-            </Button>
-            <Button type="button" className="w-full" onClick={handleSaveEdit}>
-              保存修改
             </Button>
           </DialogFooter>
         </DialogContent>
