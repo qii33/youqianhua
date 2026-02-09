@@ -108,7 +108,7 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
     if (savingsNumber > 0) {
         const bigGoal = getBigGoal()
         if (!bigGoal) {
-            toast.error("请先创建一个小猪存钱罐（大目标），不然这笔储蓄没地方放哦！")
+            toast.error("您还没有设置小猪存钱罐哦，快快右滑去设置一个大目标吧！")
             return
         }
     }

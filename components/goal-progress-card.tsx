@@ -91,21 +91,60 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
   }, [])
 
   if (!goal) {
+    // Empty state: Show the full card structure but with "Start Goal" prompt
+    const emptyProgress = 0
     return (
+      <>
       <Card className={cn(
-      "p-4 border-0 shadow-sm flex flex-col justify-between relative overflow-hidden group bg-white dark:bg-zinc-900",
-      className
-    )}>
+        "p-4 border-0 shadow-sm flex flex-col justify-between relative overflow-hidden group bg-white dark:bg-zinc-900",
+        className, minimal && "cursor-pointer"
+      )}
+      onClick={() => minimal && setEditOpen(true)}
+      >
         {minimal ? (
-          <div 
-            className="flex-1 flex items-center justify-center w-full h-full relative z-10 cursor-pointer"
-            onClick={() => setEditOpen(true)}
-          >
-            <div className="w-24 h-24 rounded-full border-4 border-dashed border-zinc-200 dark:border-zinc-700 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
-               <span className="text-3xl font-light text-zinc-300 dark:text-zinc-600">+</span>
+          <>
+            <CardHeader className="pb-0 flex-none p-4 relative z-10">
+               <div className="flex items-center justify-between mb-2">
+                 <div className="flex items-center gap-2">
+                   <span className="text-xl" role="img" aria-label="piggy bank">
+                     🐷
+                   </span>
+                   <div>
+                     <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">小猪存钱罐</h2>
+                   </div>
+                 </div>
+                 <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setEditOpen(true)
+                    }}
+                  >
+                    <span className="text-lg">⚙️</span>
+                  </Button>
+               </div>
+            </CardHeader>
+            <div className="flex-1 flex flex-col px-4 pb-3 relative z-10 w-full min-h-0 justify-end">
+               <div className="w-full mb-2">
+                 <div className="flex items-end justify-between w-full">
+                   <div className="flex items-baseline gap-1">
+                     <span className="text-xl font-medium text-zinc-400 dark:text-zinc-500">
+                        快来定个大目标，喂养小猪吧！
+                     </span>
+                   </div>
+                 </div>
+               </div>
+               
+               <div className="w-full shrink-0">
+                  <Progress value={0} className="h-1.5 bg-zinc-200 dark:bg-zinc-700 w-full" indicatorClassName="bg-lime-500" />
+               </div>
             </div>
-          </div>
+          </>
         ) : (
+            // Non-minimal empty state (rarely used in carousel but kept for completeness)
           <>
             <div className="flex items-center justify-between gap-1 mb-2 relative z-10">
               <div className="flex items-center gap-2">
@@ -127,25 +166,17 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
               </Button>
             </div>
 
-            <div className="flex-1 flex flex-col justify-center relative z-10 w-full min-h-0">
-               <div className="mt-2">
-                 <div className="flex items-baseline gap-1">
-                   <span className="text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-none">
-                     <span className="text-2xl align-top font-medium mr-1">¥</span>
-                     {goal.savedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                   </span>
+            <div className="flex-1 flex flex-col justify-center relative z-10 w-full min-h-0 items-center">
+                 <div className="text-center space-y-2">
+                     <p className="text-zinc-400 dark:text-zinc-500 font-medium">还没有目标哦</p>
+                     <Button onClick={() => setEditOpen(true)} variant="outline" className="border-dashed">
+                        建立第一个目标
+                     </Button>
                  </div>
-                 
-                 <div className="space-y-1 mt-3">
-                    <div className="flex items-center justify-between text-[10px] text-zinc-500 font-medium">
-                      <span>目标 ¥{goal.targetAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <Progress value={progress} className="h-1.5 bg-zinc-200 dark:bg-zinc-700" indicatorClassName="bg-lime-500" />
-                 </div>
-               </div>
             </div>
           </>
         )}
+        </Card>
 
         <GoalEditDialog
           open={editOpen}
@@ -161,7 +192,7 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
           onTargetAmountChange={setTargetAmount}
           onGoalSaved={(g) => setGoal(g)}
         />
-      </Card>
+      </>
     )
   }
 

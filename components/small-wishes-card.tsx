@@ -125,25 +125,23 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
 
   return (
     <>
-      <Card className={cn("overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col gap-0 md:gap-6 bg-fuchsia-500 relative group text-white", className)}>
-        
-        <CardHeader className="pb-0 md:pb-6 flex-none p-3 md:p-6 relative z-10">
-          <div className="flex items-center gap-2 md:gap-3">
-            <span className="text-xl md:text-3xl" role="img" aria-label="devil emoji">
-              😈
-            </span>
-            <div>
-              <h2 className="text-base md:text-2xl font-black text-white tracking-tight">小小愿望</h2>
-              <p className="text-[10px] md:text-xs text-white/80 hidden md:block font-medium">
-                Treat yourself occasionally
-              </p>
+      <Card className={cn("overflow-hidden border-0 shadow-none transition-all duration-300 flex flex-col bg-transparent relative group", className)}>
+        <CardContent className="flex-1 min-h-0 flex flex-col p-0 z-10">
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide relative space-y-2">
+            
+            {/* Add Wish Button Row */}
+            <div 
+               className="flex items-center gap-2 p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-700 cursor-pointer transition-all border border-dashed border-zinc-300 dark:border-zinc-700"
+               onClick={handleAddWish}
+            >
+               <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center shrink-0">
+                  <Plus className="w-4 h-4" />
+               </div>
+               <span className="text-xs font-medium">+ 许个愿望</span>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-1 min-h-0 flex flex-col p-2 md:p-6 pt-0 md:pt-0 z-10">
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide relative">
-            <div className="space-y-1.5 md:space-y-3 pb-2">
-              {displayWishes.map((wish) => {
+
+            {/* Wishes List */}
+            {displayWishes.map((wish) => {
                 const progress =
                   wish.targetAmount > 0
                     ? (wish.savedAmount / wish.targetAmount) * 100
@@ -151,7 +149,7 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
                 return (
                   <div
                     key={wish.id}
-                    className={`p-2 rounded-xl bg-white text-black shadow-sm cursor-grab active:cursor-grabbing touch-pan-y select-none transition-all duration-300 ease-[var(--ease-apple)] active:scale-[0.98] hover:scale-[1.02] hover:shadow-md ${
+                    className={`flex items-center justify-between p-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm cursor-grab active:cursor-grabbing touch-pan-y select-none transition-all duration-300 ease-[var(--ease-apple)] active:scale-[0.98] ${
                       swipedId === wish.id ? "opacity-0 translate-x-full" : ""
                     }`}
                     onTouchStart={onTouchStart}
@@ -165,46 +163,50 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
                       setTouchEnd(null)
                     }}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <span
-                          className="text-base md:text-xl shrink-0 bg-fuchsia-100 p-1 rounded-md"
-                          role="img"
-                          aria-label={wish.name}
-                        >
-                          {wish.emoji || "✨"}
-                        </span>
-                        <div className="min-w-0">
-                          <span className="text-xs md:text-sm font-bold text-black block truncate">{wish.name}</span>
-                          <span className="text-[10px] text-zinc-500 font-medium block">
-                            ¥{wish.savedAmount} / ¥{wish.targetAmount}
-                          </span>
-                        </div>
+                    <div className="flex items-center gap-2 overflow-hidden min-w-0 flex-1">
+                      <span
+                        className="text-lg shrink-0"
+                        role="img"
+                        aria-label={wish.name}
+                      >
+                        {wish.emoji || "✨"}
+                      </span>
+                      <div className="min-w-0 flex flex-col">
+                         <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">{wish.name}</span>
+                         <div className="flex items-center gap-2">
+                            <div className="w-16 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                               <div className="h-full bg-fuchsia-500 rounded-full" style={{ width: `${Math.min(progress, 100)}%` }} />
+                            </div>
+                            <span className="text-[10px] text-zinc-400 font-medium tabular-nums">
+                                {Math.round(progress)}%
+                            </span>
+                         </div>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0">
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
                         {progress >= 100 && (
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-lime-600 hover:text-lime-700 hover:bg-lime-100/50 rounded-full"
+                            className="h-6 w-6 text-lime-600 hover:text-lime-700 hover:bg-lime-100/50 rounded-full"
                             onClick={(e) => {
                               e.stopPropagation()
                               handleRealize(wish)
                             }}
                           >
-                            <span className="text-lg">🎉</span>
+                            <span className="text-sm">🎉</span>
                           </Button>
                         )}
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-full"
+                          className="h-6 w-6 text-zinc-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full"
                           onClick={(e) => {
                             e.stopPropagation()
                             if (wish.savedAmount <= 0) {
-                              // 直接删除 0 元愿望
                               const updated = wishes.filter((w) => w.id !== wish.id)
                               setWishes(updated)
                               saveWishes(updated)
@@ -216,32 +218,12 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
                             setPositiveOpen(true)
                           }}
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-3 w-3" />
                         </Button>
-                      </div>
-                    </div>
-                    <div className="relative h-2 w-full overflow-hidden rounded-full bg-zinc-100">
-                      <div
-                        className="h-full transition-all duration-500 rounded-full bg-fuchsia-500"
-                        style={{ width: `${Math.min(progress, 100)}%` }}
-                      />
                     </div>
                   </div>
                 )
               })}
-            </div>
-          </div>
-
-          <div className="pt-2 mt-auto shrink-0">
-            <Button
-              onClick={handleAddWish}
-              variant="outline"
-              size="sm"
-              className="w-full text-xs md:text-sm font-medium border-dashed border-white/50 text-white bg-white/10 hover:bg-white hover:text-fuchsia-600 h-9 md:h-10 rounded-xl transition-all"
-            >
-              <Plus className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5" />
-              许个愿望
-            </Button>
           </div>
         </CardContent>
       </Card>

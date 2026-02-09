@@ -419,8 +419,22 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button type="button" className="w-full" onClick={handleSaveEdit}>
+          <DialogFooter className="flex justify-between gap-2 sm:justify-between">
+            <Button 
+              type="button" 
+              variant="destructive" 
+              className="mr-auto bg-red-500/10 text-red-500 hover:bg-red-500/20"
+              onClick={() => {
+                if (editingId) {
+                  handleDelete(editingId)
+                  setEditOpen(false)
+                  setEditingId(null)
+                }
+              }}
+            >
+              删除
+            </Button>
+            <Button type="button" onClick={handleSaveEdit}>
               保存修改
             </Button>
           </DialogFooter>
