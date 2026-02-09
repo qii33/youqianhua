@@ -87,7 +87,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Scroll Area - Flex Column - Clean Layout */}
-          <div className="flex-1 min-h-0 flex flex-col px-4 pb-4 space-y-3 overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col px-4 pb-4 space-y-1.5 overflow-hidden">
             
             {/* Transactions (Now on Top) */}
             <div className="flex-1 min-h-[140px] flex flex-col">

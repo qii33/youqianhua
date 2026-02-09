@@ -86,6 +86,37 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
   const [warningOpen, setWarningOpen] = useState(false)
   const [sprintRemainingBudget, setSprintRemainingBudget] = useState(0)
 
+  // Swipe state
+  const [swipedId, setSwipedId] = useState<string | null>(null)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent, id: string) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = (id: string) => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      setSwipedId(id)
+    } else if (isRightSwipe) {
+      setSwipedId(null)
+    }
+    setTouchStart(null)
+    setTouchEnd(null)
+  }
+
   useEffect(() => {
     const recalculate = () => {
       const list = getTransactions()
@@ -303,14 +334,40 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
             <div className="space-y-2 md:space-y-3">
               {transactions.map((tx) => {
                 const date = new Date(tx.date)
+                const isSwiped = swipedId === tx.id
                 return (
-                  <div
-                    key={tx.id}
-                    className="flex items-center justify-between gap-2 md:gap-3 p-2.5 md:p-3 rounded-2xl bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800/50 hover:border-zinc-700 transition-all duration-200 group/item shadow-sm"
+                  <div key={tx.id} className="relative overflow-hidden rounded-2xl">
+                    {/* Delete Background Action */}
+                    <div className="absolute inset-y-0 right-0 w-20 bg-red-500/10 flex items-center justify-center z-0 rounded-r-2xl">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-full w-full rounded-none hover:bg-red-500/20 text-red-500"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                handleDelete(tx.id)
+                            }}
+                        >
+                            <Trash2 className="h-5 w-5" />
+                        </Button>
+                    </div>
+
+                    {/* Content */}
+                    <div
+                    className={`relative z-10 flex items-center justify-between gap-2 md:gap-3 p-2.5 md:p-3 bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700 transition-transform duration-300 ease-[var(--ease-apple)] shadow-sm touch-pan-y ${isSwiped ? '-translate-x-16' : 'translate-x-0'}`}
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleOpenEdit(tx)
+                      // If already swiped, close it. Otherwise open edit.
+                      if (isSwiped) {
+                          setSwipedId(null)
+                      } else {
+                          handleOpenEdit(tx)
+                      }
                     }}
+                    onTouchStart={(e) => onTouchStart(e, tx.id)}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={() => onTouchEnd(tx.id)}
                   >
                     <div className="flex items-center gap-2 md:gap-3 min-w-0">
                       <div className="flex flex-col items-center justify-center min-w-[2rem] md:min-w-[3rem] text-zinc-500">
@@ -348,6 +405,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
                       >
                         {tx.type === "income" ? "+" : "-"}¥ {tx.amount.toFixed(2)}
                       </span>
+                      {/* Desktop Delete (keep it for desktop users) */}
                       <Button
                         type="button"
                         size="icon"
@@ -360,6 +418,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
                         <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                       </Button>
                     </div>
+                  </div>
                   </div>
                 )
               })}
@@ -420,20 +479,8 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
             </div>
           </div>
           <DialogFooter className="flex justify-between gap-2 sm:justify-between">
-            <Button 
-              type="button" 
-              variant="destructive" 
-              className="mr-auto bg-red-500/10 text-red-500 hover:bg-red-500/20"
-              onClick={() => {
-                if (editingId) {
-                  handleDelete(editingId)
-                  setEditOpen(false)
-                  setEditingId(null)
-                }
-              }}
-            >
-              删除
-            </Button>
+            {/* Mobile swipe delete implemented, keeping delete hidden in dialog to reduce abruptness */}
+            <div /> 
             <Button type="button" onClick={handleSaveEdit}>
               保存修改
             </Button>

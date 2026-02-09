@@ -93,54 +93,30 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
     saveWishes(updated)
   }
 
-  const handleMouseDown = (e: React.MouseEvent, wishId: string) => {
-    setTouchStart(e.clientX)
-  }
+  // Detail/Action State
+  const [actionOpen, setActionOpen] = useState(false)
+  const [selectedWish, setSelectedWish] = useState<Wish | null>(null)
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (touchStart !== null) {
-      setTouchEnd(e.clientX)
-    }
-  }
-
-  const handleMouseUp = (wishId: string) => {
-    if (!touchStart || !touchEnd) {
-      setTouchStart(null)
-      setTouchEnd(null)
-      return
-    }
-    const distance = touchStart - touchEnd
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isRightSwipe) {
-      setSwipedId(wishId)
-      setTimeout(() => {
-        setWishes(wishes.filter((w) => w.id !== wishId))
-        setSwipedId(null)
-      }, 300)
-    }
-    setTouchStart(null)
-    setTouchEnd(null)
+  const handleWishClick = (wish: Wish) => {
+    setSelectedWish(wish)
+    setActionOpen(true)
   }
 
   return (
     <>
-      <Card className={cn("overflow-hidden border-0 shadow-none transition-all duration-300 flex flex-col bg-transparent relative group", className)}>
-        <CardContent className="flex-1 min-h-0 flex flex-col p-0 z-10">
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide relative space-y-2">
+      <Card className={cn("overflow-hidden border-0 shadow-none transition-all duration-300 flex flex-col bg-transparent relative group h-full", className)}>
+        <CardContent className="flex-1 min-h-0 p-0 z-10 h-full">
+          <div className="h-full flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-1 gap-3 touch-pan-x">
             
-            {/* Add Wish Button Row */}
+            {/* Add Wish Button - Compact Circle */}
             <div 
-               className="flex items-center gap-2 p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-700 cursor-pointer transition-all border border-dashed border-zinc-300 dark:border-zinc-700"
+               className="shrink-0 w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-700 cursor-pointer transition-all border border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center group/add"
                onClick={handleAddWish}
             >
-               <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center shrink-0">
-                  <Plus className="w-4 h-4" />
-               </div>
-               <span className="text-xs font-medium">+ 许个愿望</span>
+               <Plus className="w-5 h-5 group-hover/add:scale-110 transition-transform" />
             </div>
 
-            {/* Wishes List */}
+            {/* Wishes List - Horizontal Bubbles */}
             {displayWishes.map((wish) => {
                 const progress =
                   wish.targetAmount > 0
@@ -149,77 +125,44 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
                 return (
                   <div
                     key={wish.id}
-                    className={`flex items-center justify-between p-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm cursor-grab active:cursor-grabbing touch-pan-y select-none transition-all duration-300 ease-[var(--ease-apple)] active:scale-[0.98] ${
-                      swipedId === wish.id ? "opacity-0 translate-x-full" : ""
-                    }`}
-                    onTouchStart={onTouchStart}
-                    onTouchMove={onTouchMove}
-                    onTouchEnd={() => onTouchEnd(wish.id)}
-                    onMouseDown={(e) => handleMouseDown(e, wish.id)}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={() => handleMouseUp(wish.id)}
-                    onMouseLeave={() => {
-                      setTouchStart(null)
-                      setTouchEnd(null)
-                    }}
+                    className="shrink-0 flex items-center gap-3 pl-3 pr-4 py-2 rounded-full bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    onClick={() => handleWishClick(wish)}
                   >
-                    <div className="flex items-center gap-2 overflow-hidden min-w-0 flex-1">
-                      <span
-                        className="text-lg shrink-0"
-                        role="img"
-                        aria-label={wish.name}
-                      >
-                        {wish.emoji || "✨"}
-                      </span>
-                      <div className="min-w-0 flex flex-col">
-                         <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">{wish.name}</span>
-                         <div className="flex items-center gap-2">
-                            <div className="w-16 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                               <div className="h-full bg-fuchsia-500 rounded-full" style={{ width: `${Math.min(progress, 100)}%` }} />
-                            </div>
-                            <span className="text-[10px] text-zinc-400 font-medium tabular-nums">
-                                {Math.round(progress)}%
-                            </span>
-                         </div>
-                      </div>
+                    <div className="relative">
+                        <span className="text-2xl" role="img" aria-label={wish.name}>
+                            {wish.emoji || "✨"}
+                        </span>
+                        {/* Circular Progress Indicator */}
+                        <svg className="absolute -inset-1 w-[calc(100%+8px)] h-[calc(100%+8px)] -rotate-90 pointer-events-none">
+                           <circle
+                             className="text-transparent"
+                             strokeWidth="2"
+                             stroke="currentColor"
+                             fill="transparent"
+                             r="14"
+                             cx="50%"
+                             cy="50%"
+                           />
+                           <circle
+                             className={progress >= 100 ? "text-lime-500" : "text-fuchsia-500"}
+                             strokeWidth="2"
+                             strokeDasharray={88}
+                             strokeDashoffset={88 - (Math.min(progress, 100) / 100) * 88}
+                             strokeLinecap="round"
+                             stroke="currentColor"
+                             fill="transparent"
+                             r="14"
+                             cx="50%"
+                             cy="50%"
+                           />
+                        </svg>
                     </div>
-
-                    <div className="flex items-center gap-1 shrink-0">
-                        {progress >= 100 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 text-lime-600 hover:text-lime-700 hover:bg-lime-100/50 rounded-full"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleRealize(wish)
-                            }}
-                          >
-                            <span className="text-sm">🎉</span>
-                          </Button>
-                        )}
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 text-zinc-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (wish.savedAmount <= 0) {
-                              const updated = wishes.filter((w) => w.id !== wish.id)
-                              setWishes(updated)
-                              saveWishes(updated)
-                              return
-                            }
-                            setPositiveAmount(wish.savedAmount)
-                            setPositiveSource(`放弃愿望「${wish.name}」`)
-                            setPendingWishId(wish.id)
-                            setPositiveOpen(true)
-                          }}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
+                    
+                    <div className="flex flex-col min-w-[3rem]">
+                       <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">{wish.name}</span>
+                       <span className="text-[10px] text-zinc-400 font-medium tabular-nums">
+                          ¥{wish.savedAmount} / {Math.round(progress)}%
+                       </span>
                     </div>
                   </div>
                 )
@@ -227,6 +170,69 @@ export function SmallWishesCard({ className, limit }: { className?: string; limi
           </div>
         </CardContent>
       </Card>
+
+      {/* Detail Action Dialog */}
+      <Dialog open={actionOpen} onOpenChange={setActionOpen}>
+        <DialogContent className="max-w-xs rounded-3xl">
+           <DialogHeader>
+             <DialogTitle className="text-center flex flex-col items-center gap-2">
+                <span className="text-4xl">{selectedWish?.emoji}</span>
+                <span>{selectedWish?.name}</span>
+             </DialogTitle>
+             <DialogDescription className="text-center">
+                当前进度: {selectedWish ? Math.round((selectedWish.savedAmount / selectedWish.targetAmount) * 100) : 0}%
+                <br/>
+                (¥{selectedWish?.savedAmount} / ¥{selectedWish?.targetAmount})
+             </DialogDescription>
+           </DialogHeader>
+           
+           <div className="flex flex-col gap-3 mt-4">
+              {selectedWish && (selectedWish.savedAmount >= selectedWish.targetAmount) && (
+                 <Button 
+                   className="w-full bg-lime-500 hover:bg-lime-600 text-white rounded-xl h-12 text-base"
+                   onClick={() => {
+                     handleRealize(selectedWish)
+                     setActionOpen(false)
+                   }}
+                 >
+                   🎉 愿望达成！
+                 </Button>
+              )}
+              
+              <Button 
+                variant="destructive" 
+                className="w-full bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 rounded-xl h-12 text-base shadow-none"
+                onClick={() => {
+                   if (!selectedWish) return
+                   if (selectedWish.savedAmount <= 0) {
+                      const updated = wishes.filter((w) => w.id !== selectedWish.id)
+                      setWishes(updated)
+                      saveWishes(updated)
+                      setActionOpen(false)
+                      return
+                   }
+                   setPositiveAmount(selectedWish.savedAmount)
+                   setPositiveSource(`放弃愿望「${selectedWish.name}」`)
+                   setPendingWishId(selectedWish.id)
+                   setPositiveOpen(true)
+                   setActionOpen(false)
+                }}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                放弃这个愿望
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="w-full rounded-xl"
+                onClick={() => setActionOpen(false)}
+              >
+                再想想
+              </Button>
+           </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>
           <DialogHeader>
