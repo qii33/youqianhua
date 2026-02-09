@@ -346,7 +346,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
                             : "text-white"
                         }`}
                       >
-                        {tx.type === "income" ? "+" : "-"}¥ {tx.amount.toFixed(0)}
+                        {tx.type === "income" ? "+" : "-"}¥ {tx.amount.toFixed(2)}
                       </span>
                       <Button
                         type="button"

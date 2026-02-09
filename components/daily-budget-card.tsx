@@ -14,6 +14,7 @@ import {
   ensureDemoData,
   startSprint,
   getSprintStage,
+  getBigGoal,
   type Sprint,
   type SprintStage,
   BUDGET_EVENT,
@@ -98,8 +99,18 @@ export function DailyBudgetCard({ className }: DailyBudgetCardProps) {
     e.preventDefault()
     const incomeNumber = Number(income)
     const savingsNumber = Number(savingsGoal)
-    if (!incomeNumber || !savingsNumber || !startDate || !endDate) {
+    // Allow savings to be 0, but income must be present.
+    if (!incomeNumber || savingsNumber < 0 || !startDate || !endDate) {
       return
+    }
+
+    // Validation: Check if Piggy Bank exists if there are savings
+    if (savingsNumber > 0) {
+        const bigGoal = getBigGoal()
+        if (!bigGoal) {
+            toast.error("请先创建一个小猪存钱罐（大目标），不然这笔储蓄没地方放哦！")
+            return
+        }
     }
 
     // Validation: Income must be greater than savings

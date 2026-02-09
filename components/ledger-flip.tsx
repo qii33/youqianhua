@@ -149,7 +149,7 @@ function LedgerView({ onBack }: LedgerViewProps) {
                      "text-[9px] leading-none font-bold tabular-nums truncate max-w-full text-center transition-colors duration-300",
                      isSelected && isCurrentMonth ? "text-background/90" : "text-rose-600"
                    )}>
-                      {data.expense > 9999 ? (data.expense/10000).toFixed(1) + 'w' : Number(data.expense).toString()}
+                      {data.expense > 9999 ? (data.expense/10000).toFixed(1) + 'w' : data.expense.toFixed(2)}
                    </span>
                 )}
               </div>
@@ -172,7 +172,7 @@ function LedgerView({ onBack }: LedgerViewProps) {
                      "text-[9px] leading-none font-bold tabular-nums truncate max-w-full text-center transition-colors duration-300",
                      isSelected && isCurrentMonth ? "text-background/90" : "text-lime-600"
                    )}>
-                      {data.income > 9999 ? (data.income/10000).toFixed(1) + 'w' : Number(data.income).toString()}
+                      {data.income > 9999 ? (data.income/10000).toFixed(1) + 'w' : data.income.toFixed(2)}
                    </span>
                  )}
               </div>

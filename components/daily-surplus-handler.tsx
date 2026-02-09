@@ -158,7 +158,7 @@ export function DailySurplusHandler() {
                     <option value="" disabled>选择一个愿望...</option>
                     {wishes.map(w => (
                       <option key={w.id} value={w.id}>
-                        {w.emoji} {w.name} (还差 ¥{(w.targetAmount - w.savedAmount).toFixed(0)})
+                        {w.emoji} {w.name} (还差 ¥{(w.targetAmount - w.savedAmount).toFixed(2)})
                       </option>
                     ))}
                   </select>
