@@ -131,9 +131,10 @@ export function GoalProgressCard({ className, minimal = false }: { className?: s
                <div className="w-full mb-2">
                  <div className="flex items-end justify-between w-full">
                    <div className="flex items-baseline gap-1">
-                     <span className="text-xl font-medium text-zinc-400 dark:text-zinc-500">
-                        快来定个大目标，喂养小猪吧！
-                     </span>
+                     <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 leading-relaxed">
+                        快来定个大目标，<br/>
+                        喂养小猪吧！
+                     </p>
                    </div>
                  </div>
                </div>

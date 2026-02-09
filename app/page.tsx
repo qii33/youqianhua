@@ -87,7 +87,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Scroll Area - Flex Column - Clean Layout */}
-          <div className="flex-1 min-h-0 flex flex-col px-4 pb-4 space-y-1.5 overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col px-4 pb-4 space-y-1 overflow-hidden">
             
             {/* Transactions (Now on Top) */}
             <div className="flex-1 min-h-[140px] flex flex-col">
@@ -96,9 +96,9 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Wishes (Now at Bottom, Compact) */}
+            {/* Wishes (Now at Bottom, Compact, Transparent) */}
             <div className="flex-none h-[80px] flex flex-col">
-              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm">
+              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:hidden rounded-2xl">
                 <SmallWishesCard limit={3} className="shadow-none border-0 h-full" />
               </div>
             </div>

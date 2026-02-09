@@ -355,7 +355,7 @@ export function RecentTransactionsCard({ onOpenLedger, limit = 20 }: RecentTrans
 
                     {/* Content */}
                     <div
-                    className={`relative z-10 flex items-center justify-between gap-2 md:gap-3 p-2.5 md:p-3 bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700 transition-transform duration-300 ease-[var(--ease-apple)] shadow-sm touch-pan-y ${isSwiped ? '-translate-x-16' : 'translate-x-0'}`}
+                    className={`relative z-10 flex items-center justify-between gap-2 md:gap-3 p-2.5 md:p-3 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-transform duration-300 ease-[var(--ease-apple)] shadow-sm touch-pan-y rounded-2xl ${isSwiped ? '-translate-x-16' : 'translate-x-0'}`}
                     onClick={(e) => {
                       e.stopPropagation()
                       // If already swiped, close it. Otherwise open edit.
